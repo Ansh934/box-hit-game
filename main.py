@@ -99,6 +99,7 @@ def draw_settings():
 
     def draw_popup(popup_options):
         while 1: 
+            # display.fill(colors["white"]) 
             options = len(popup_options) + 1
             popup_height = 50 * options
             popup_width = display_width * 0.4
@@ -114,37 +115,41 @@ def draw_settings():
                 ),
                 width=5,
             )
-            # hitboxes = []
-            # for i, option in enumerate(popup_options):
-            #     text = font.render(option, True, colors["black"], colors["white"])
-            #     text_width = text.get_width()
-            #     text_height = text.get_height() + 10
-            #     point_x = (display_width - text_width) // 2
-            #     point_y = (
-            #         display_height - text_height * len(menu_options)
-            #     ) // 2 + i * text_height
-            #     hitboxes.append(
-            #         (
-            #             (
-            #                 point_x,
-            #                 point_y,
-            #             ),
-            #             (
-            #                 point_x + text_width,
-            #                 point_y + text_height,
-            #             ),
-            #         )
-            #     )
-            #     display.blit(
-            #         text,
-            #         (
-            #             point_x,
-            #             point_y,
-            #         ),
-            #     )
-            # pygame.display.flip()
-            # sleep(5)
+            
+            hitboxes = []
+            for i, option in enumerate(popup_options):
+                text = font.render(option, True, colors["black"], colors["white"])
+                text_width = text.get_width()
+                text_height = text.get_height() + 10
+                point_x = (display_width - text_width) // 2
+                point_y = (
+                    (display_height - text_height * options)
+                ) // 2 + i * text_height
+                hitboxes.append(
+                    (
+                        (point_x, point_y),
+                        (point_x + text_width, point_y + text_height),
+                    )
+                )
+                display.blit(text, (point_x, point_y))
+            
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return  
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  
+                        for i, hitbox in enumerate(hitboxes):
+                            if hitbox[0][0] < event.pos[0] < hitbox[1][0] and hitbox[0][1] < event.pos[1] < hitbox[1][1]:
+                                print(f"Clicked on {popup_options[i]}")
+                                return 
+
+            pygame.display.flip()  
+            sleep(0.01)  
     while 1:
         display.fill(colors["white"])
         display_width, display_height = display_res
